@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { cn } from "@/registry/bitsandpieces/lib/utils";
+import { cn } from "@/registry/tessera/lib/utils";
 
 interface PropDefinition {
   name: string;
@@ -18,10 +18,15 @@ interface PropsTableProps {
 
 export const PropsTable: React.FC<PropsTableProps> = ({ props, className }) => {
   return (
-    <div className={cn("my-6 overflow-x-auto", className)}>
-      <table className="w-full text-sm border-collapse">
+    <div
+      className={cn(
+        "my-6 overflow-x-auto rounded-[14px] border border-border bg-white",
+        className,
+      )}
+    >
+      <table className="w-full text-[13.5px] border-collapse">
         <thead>
-          <tr className="border-b border-border">
+          <tr className="border-b border-border bg-surface/80">
             <th className="py-3 px-4 text-left font-semibold text-foreground">
               Prop
             </th>
@@ -41,33 +46,38 @@ export const PropsTable: React.FC<PropsTableProps> = ({ props, className }) => {
             <tr
               key={prop.name}
               className={cn(
-                "border-b border-border/50 hover:bg-muted/30 transition-colors",
+                "border-b border-border/60 transition-colors hover:bg-surface/40",
                 index === props.length - 1 && "border-b-0",
               )}
             >
-              <td className="py-3 px-4">
-                <code className="text-sm font-mono text-foreground bg-muted px-1.5 py-0.5 rounded">
+              <td className="py-3.5 px-4 align-top whitespace-nowrap">
+                <code className="rounded-md border border-border/80 bg-surface px-1.5 py-0.5 font-mono text-xs font-medium text-foreground">
                   {prop.name}
                 </code>
                 {prop.required && (
-                  <span className="ml-1 text-destructive text-xs">*</span>
+                  <span
+                    className="ml-1 text-destructive text-xs font-medium"
+                    title="Required"
+                  >
+                    *
+                  </span>
                 )}
               </td>
-              <td className="py-3 px-4">
-                <code className="text-sm font-mono text-muted-foreground">
+              <td className="py-3.5 px-4 align-top">
+                <code className="font-mono text-xs text-foreground/75">
                   {prop.type}
                 </code>
               </td>
-              <td className="py-3 px-4">
+              <td className="py-3.5 px-4 align-top whitespace-nowrap">
                 {prop.default ? (
-                  <code className="text-sm font-mono text-muted-foreground">
+                  <code className="font-mono text-xs text-muted-foreground">
                     {prop.default}
                   </code>
                 ) : (
-                  <span className="text-muted-foreground">-</span>
+                  <span className="text-muted-foreground">—</span>
                 )}
               </td>
-              <td className="py-3 px-4 text-muted-foreground">
+              <td className="py-3.5 px-4 align-top leading-relaxed text-muted-foreground">
                 {prop.description}
               </td>
             </tr>

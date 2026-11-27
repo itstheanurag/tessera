@@ -1,0 +1,26 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "hold-button",
+  "title": "Hold Button",
+  "description": "Asymmetric hold-to-confirm button with linear press fill and snappy ease-out release.",
+  "dependencies": [
+    "react-icons",
+    "clsx",
+    "tailwind-merge"
+  ],
+  "files": [
+    {
+      "path": "registry/tessera/motion-and-effects/hold-button/hold-button.tsx",
+      "content": "\"use client\";\n\nimport React, { useRef, useState } from \"react\";\nimport { FiCheck } from \"react-icons/fi\";\nimport { cn } from \"@/registry/tessera/lib/utils\";\n\nexport interface HoldButtonProps {\n  /** Idle label before confirmation. */\n  label?: string;\n  /** Label shown once the hold completes. */\n  confirmedLabel?: string;\n  /** Hold duration in milliseconds. */\n  durationMs?: number;\n  /** Callback fired once the hold completes. */\n  onConfirm?: () => void;\n  className?: string;\n}\n\nexport function HoldButton({\n  label = \"Hold to confirm\",\n  confirmedLabel = \"Confirmed\",\n  durationMs = 1000,\n  onConfirm,\n  className,\n}: HoldButtonProps) {\n  const [holding, setHolding] = useState(false);\n  const [confirmed, setConfirmed] = useState(false);\n  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);\n\n  const handleDown = () => {\n    if (confirmed) {\n      setConfirmed(false);\n      return;\n    }\n    setHolding(true);\n    timerRef.current = setTimeout(() => {\n      setHolding(false);\n      setConfirmed(true);\n      onConfirm?.();\n    }, durationMs);\n  };\n\n  const handleCancel = () => {\n    setHolding(false);\n    if (timerRef.current) {\n      clearTimeout(timerRef.current);\n      timerRef.current = null;\n    }\n  };\n\n  return (\n    <button\n      type=\"button\"\n      onPointerDown={handleDown}\n      onPointerUp={handleCancel}\n      onPointerLeave={handleCancel}\n      onPointerCancel={handleCancel}\n      className={cn(\n        \"tessera-press relative inline-flex h-12 min-w-[200px] items-center justify-center overflow-hidden rounded-full border border-black/[0.08] bg-white px-6 text-sm font-medium select-none shadow-[0_2px_10px_-3px_rgba(17,17,19,0.08)]\",\n        className,\n      )}\n    >\n      <span\n        aria-hidden=\"true\"\n        className=\"pointer-events-none absolute inset-0 origin-left bg-[#111113]\"\n        style={{\n          transform: confirmed || holding ? \"scaleX(1)\" : \"scaleX(0)\",\n          transition: confirmed\n            ? \"transform 160ms cubic-bezier(0.23, 1, 0.32, 1)\"\n            : holding\n              ? `transform ${durationMs}ms linear`\n              : \"transform 180ms cubic-bezier(0.23, 1, 0.32, 1)\",\n        }}\n      />\n      <span\n        className={cn(\n          \"relative z-10 inline-flex items-center gap-2 transition-colors duration-150\",\n          holding || confirmed ? \"text-white\" : \"text-[#111113]\",\n        )}\n      >\n        {confirmed ? (\n          <>\n            <FiCheck className=\"h-4 w-4\" />\n            <span>{confirmedLabel}</span>\n          </>\n        ) : (\n          <span>{label}</span>\n        )}\n      </span>\n    </button>\n  );\n}\n",
+      "type": "registry:component",
+      "target": "components/tessera/hold-button.tsx"
+    },
+    {
+      "path": "registry/tessera/lib/utils.ts",
+      "content": "import { clsx, type ClassValue } from \"clsx\";\nimport { twMerge } from \"tailwind-merge\";\n\nexport function cn(...inputs: ClassValue[]) {\n  return twMerge(clsx(inputs));\n}\n",
+      "type": "registry:lib",
+      "target": "lib/utils.ts"
+    }
+  ],
+  "type": "registry:component"
+}

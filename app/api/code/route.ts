@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
     const code = await fs.readFile(fullPath, "utf8");
     const html = await codeToHtml(code, {
       lang: "tsx",
-      theme: "github-dark-default",
+      theme: "github-light",
     });
     return NextResponse.json({ code, html });
   } catch (err) {
@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
 
     const html = await codeToHtml(code, {
       lang: "tsx",
-      theme: "github-dark-default",
+      theme: "github-light",
     });
 
     return NextResponse.json({ html });

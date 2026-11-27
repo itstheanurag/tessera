@@ -1,7 +1,5 @@
 import React from "react";
 
-// Example registry - independent of everything
-// Maps example names to their component and file path
 export type ExampleItem = {
   name: string;
   component: React.ComponentType<Record<string, unknown>>;
@@ -11,42 +9,57 @@ export type ExampleItem = {
 };
 
 export const exampleRegistry: Record<string, ExampleItem> = {
-  "multi-step-form-basic": {
-    name: "multi-step-form-basic",
+  "stitched-button-demo": {
+    name: "stitched-button-demo",
     component: React.lazy(
-      () => import("@/examples/forms/multi-step/name-email-password-form"),
+      () => import("@/examples/inputs-and-forms/stitched-button-demo"),
     ),
-    path: "examples/forms/multi-step/name-email-password-form.tsx",
-    title: "Basic Example",
-    parentComponent: "multi-step-form",
+    path: "examples/inputs-and-forms/stitched-button-demo.tsx",
+    title: "Stitched Button Variants",
+    parentComponent: "stitched-button",
   },
-  "multi-step-form-personal": {
-    name: "multi-step-form-personal",
+  "segmented-dock-demo": {
+    name: "segmented-dock-demo",
     component: React.lazy(
-      () =>
-        import("@/examples/forms/multi-step/personal-details-multi-step-form"),
+      () => import("@/examples/navigation-and-layout/segmented-dock-demo"),
     ),
-    path: "examples/forms/multi-step/personal-details-multi-step-form.tsx",
-    title: "Personal Details",
-    parentComponent: "multi-step-form",
+    path: "examples/navigation-and-layout/segmented-dock-demo.tsx",
+    title: "Segmented Dock",
+    parentComponent: "segmented-dock",
   },
-  "multi-step-form-shipping": {
-    name: "multi-step-form-shipping",
+  "dynamic-tray-demo": {
+    name: "dynamic-tray-demo",
     component: React.lazy(
-      () => import("@/examples/forms/multi-step/shipping-billing-form"),
+      () => import("@/examples/overlays-and-feedback/dynamic-tray-demo"),
     ),
-    path: "examples/forms/multi-step/shipping-billing-form.tsx",
-    title: "Shipping & Billing",
-    parentComponent: "multi-step-form",
+    path: "examples/overlays-and-feedback/dynamic-tray-demo.tsx",
+    title: "Multi-View Dynamic Tray",
+    parentComponent: "dynamic-tray",
+  },
+  "spring-card-stack-demo": {
+    name: "spring-card-stack-demo",
+    component: React.lazy(
+      () => import("@/examples/cards-and-display/spring-card-stack-demo"),
+    ),
+    path: "examples/cards-and-display/spring-card-stack-demo.tsx",
+    title: "Spring Card Stack",
+    parentComponent: "spring-card-stack",
+  },
+  "hold-button-demo": {
+    name: "hold-button-demo",
+    component: React.lazy(
+      () => import("@/examples/motion-and-effects/hold-button-demo"),
+    ),
+    path: "examples/motion-and-effects/hold-button-demo.tsx",
+    title: "Hold to Confirm",
+    parentComponent: "hold-button",
   },
 };
 
-// Helper function to get example by name
 export function getExample(name: string): ExampleItem | null {
   return exampleRegistry[name] || null;
 }
 
-// Helper function to get all examples for a parent component
 export function getExamplesForComponent(parentName: string): ExampleItem[] {
   return Object.values(exampleRegistry).filter(
     (example) => example.parentComponent === parentName,

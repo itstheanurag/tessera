@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { cn } from "@/registry/bitsandpieces/lib/utils";
+import { cn } from "@/registry/tessera/lib/utils";
 import { BiCheck, BiCopy } from "react-icons/bi";
 
 interface CodeBlockProps {

@@ -1,0 +1,50 @@
+---
+title: Stitched Button
+description: Tactile pill button with an inset 1px dashed thread border and crisp press feedback.
+---
+
+# Stitched Button
+
+A pill button featuring an inset `1px` dashed thread border, subtle inner top sheen, and `140ms ease-out` press feedback.
+
+## Preview
+
+<ComponentPreview name="stitched-button-demo" />
+
+## Installation
+
+<InstallationTabs
+  componentName="stitched-button"
+  dependencies={["clsx", "tailwind-merge"]}
+/>
+
+## Props
+
+<PropsTable
+  props={[
+    {
+      name: "variant",
+      type: "\"obsidian\" | \"porcelain\" | \"ghost\"",
+      default: "\"obsidian\"",
+      description: "Visual surface treatment of the button.",
+    },
+    {
+      name: "size",
+      type: "\"sm\" | \"md\" | \"lg\"",
+      default: "\"md\"",
+      description: "Height and horizontal padding scale.",
+    },
+    {
+      name: "stitched",
+      type: "boolean",
+      default: "true",
+      description: "Renders the inset 1px dashed inner border.",
+    },
+    {
+      name: "loading",
+      type: "boolean",
+      default: "false",
+      description: "Disables interaction and displays an inline spinner.",
+    },
+  ]}
+/>

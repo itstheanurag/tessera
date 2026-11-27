@@ -1,68 +1,78 @@
 "use client";
 
 import React, { useState } from "react";
-import { BiCopy, BiCheck } from "react-icons/bi";
+import { FiCheck, FiCopy } from "react-icons/fi";
+import { cn } from "@/registry/tessera/lib/utils";
 
 interface CodeViewerProps {
   code?: string;
   highlightedHtml?: string;
-  onHighlight?: (code: string) => Promise<string>;
+  filename?: string;
   className?: string;
 }
 
 export function CodeViewer({
   code,
   highlightedHtml,
-  onHighlight,
+  filename,
   className,
 }: CodeViewerProps) {
-  const [html, setHtml] = useState(highlightedHtml || "<pre>Loading...</pre>");
-  const [displayCode, setDisplayCode] = useState(code);
   const [copied, setCopied] = useState(false);
 
-  React.useEffect(() => {
-    if (highlightedHtml) {
-      setHtml(highlightedHtml);
-    } else if (code && onHighlight) {
-      onHighlight(code).then((highlighted) => {
-        setHtml(highlighted);
-      });
-    }
-  }, [code, highlightedHtml, onHighlight]);
-
   const handleCopy = async () => {
-    const textToCopy = displayCode || code;
-    if (textToCopy) {
-      await navigator.clipboard.writeText(textToCopy);
+    if (!code) return;
+    try {
+      await navigator.clipboard.writeText(code);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      setTimeout(() => setCopied(false), 1800);
+    } catch {
+      // Clipboard unavailable
     }
   };
 
   return (
-    <div className={className}>
-      {/* Copy Button */}
-      <button
-        onClick={handleCopy}
-        className="absolute top-2 right-6 p-2 rounded-md bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground transition-colors z-10"
-        aria-label="Copy code"
-      >
-        {copied ? (
-          <BiCheck className="w-4 h-4 text-green-500" />
-        ) : (
-          <BiCopy className="w-4 h-4" />
-        )}
-      </button>
+    <div className={cn("relative bg-[#fafafb]", className)}>
+      {/* Subtle utility bar with optional filename + copy pill */}
+      <div className="flex items-center justify-between border-b border-black/[0.06] bg-[#f6f6f8] px-4 py-2">
+        <span className="font-mono text-[11.5px] text-muted-foreground truncate">
+          {filename ?? "component.tsx"}
+        </span>
+        <button
+          type="button"
+          onClick={handleCopy}
+          aria-label="Copy code"
+          className="tessera-press inline-flex h-7 items-center gap-1.5 rounded-full border border-black/[0.07] bg-white px-2.5 text-[11.5px] font-medium text-foreground shadow-[0_1px_2px_rgba(17,17,19,0.04)] hover:bg-surface"
+        >
+          {copied ? (
+            <>
+              <FiCheck className="h-3 w-3 text-foreground" />
+              <span>Copied</span>
+            </>
+          ) : (
+            <>
+              <FiCopy className="h-3 w-3 text-muted-foreground" />
+              <span>Copy</span>
+            </>
+          )}
+        </button>
+      </div>
 
+      {/* Scrollable light syntax-highlighted code */}
       <div
-        className="p-4 text-sm font-mono overflow-auto max-h-[500px] bg-[#0d1117]"
-        dangerouslySetInnerHTML={{ __html: html }}
+        className="tessera-scrollbar tessera-code-block max-h-[460px] overflow-auto px-5 py-4 font-mono text-[13px] leading-[1.7] text-[#111113]"
+        dangerouslySetInnerHTML={{
+          __html:
+            highlightedHtml ||
+            `<pre class="text-muted-foreground">${escapeHtml(code ?? "")}</pre>`,
+        }}
       />
     </div>
   );
 }
 
-// Utility function to escape HTML
 export function escapeHtml(text: string): string {
-  return text.replace(/&/g, "&").replace(/</g, "<").replace(/>/g, ">");
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
 }

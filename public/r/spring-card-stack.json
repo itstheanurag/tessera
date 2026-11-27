@@ -1,0 +1,26 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "spring-card-stack",
+  "title": "Spring Card Stack",
+  "description": "Interactive depth-layered card deck driven by spring physics.",
+  "dependencies": [
+    "motion",
+    "clsx",
+    "tailwind-merge"
+  ],
+  "files": [
+    {
+      "path": "registry/tessera/cards-and-display/spring-card-stack/spring-card-stack.tsx",
+      "content": "\"use client\";\n\nimport React, { useState } from \"react\";\nimport { motion, useReducedMotion } from \"motion/react\";\nimport { cn } from \"@/registry/tessera/lib/utils\";\n\nexport interface StackCardItem {\n  id: string;\n  title: string;\n  meta?: string;\n  description: string;\n}\n\nexport interface SpringCardStackProps {\n  cards: StackCardItem[];\n  className?: string;\n}\n\nexport function SpringCardStack({ cards, className }: SpringCardStackProps) {\n  const reduceMotion = useReducedMotion();\n  const [index, setIndex] = useState(0);\n\n  if (cards.length === 0) return null;\n\n  const visibleCount = Math.min(3, cards.length);\n  const ordered = Array.from({ length: visibleCount }, (_, offset) => {\n    return cards[(index + offset) % cards.length];\n  });\n\n  const spring = reduceMotion\n    ? { duration: 0.08 }\n    : { type: \"spring\" as const, stiffness: 420, damping: 32 };\n\n  return (\n    <div className={cn(\"w-full max-w-[360px] space-y-3\", className)}>\n      <div className=\"relative h-[156px] w-full\">\n        {ordered.map((card, pos) => {\n          const isFront = pos === 0;\n          return (\n            <motion.button\n              key={card.id}\n              type=\"button\"\n              onClick={() => setIndex((i) => (i + 1) % cards.length)}\n              animate={{\n                y: pos * 11,\n                scale: 1 - pos * 0.045,\n                opacity: 1 - pos * 0.22,\n                zIndex: visibleCount - pos,\n              }}\n              transition={spring}\n              className={cn(\n                \"absolute inset-x-0 top-0 w-full rounded-[18px] border border-black/[0.08] bg-white p-5 text-left shadow-[0_6px_20px_-6px_rgba(17,17,19,0.08),0_1px_2px_rgba(17,17,19,0.04)]\",\n                isFront\n                  ? \"cursor-pointer hover:border-black/[0.16]\"\n                  : \"pointer-events-none\",\n              )}\n            >\n              <div className=\"flex items-center justify-between gap-2\">\n                <span className=\"text-sm font-semibold text-[#111113]\">\n                  {card.title}\n                </span>\n                {card.meta && (\n                  <span className=\"font-mono text-[11px] text-[#6b6b73]\">\n                    {card.meta}\n                  </span>\n                )}\n              </div>\n              <p className=\"mt-2 text-xs leading-relaxed text-[#6b6b73]\">\n                {card.description}\n              </p>\n            </motion.button>\n          );\n        })}\n      </div>\n\n      <div className=\"flex items-center justify-between px-1 text-xs text-[#6b6b73]\">\n        <span className=\"font-mono tabular-nums\">\n          {(index % cards.length) + 1} / {cards.length}\n        </span>\n        <button\n          type=\"button\"\n          onClick={() => setIndex((i) => (i + 1) % cards.length)}\n          className=\"font-medium text-[#111113] hover:underline\"\n        >\n          Next card →\n        </button>\n      </div>\n    </div>\n  );\n}\n",
+      "type": "registry:component",
+      "target": "components/tessera/spring-card-stack.tsx"
+    },
+    {
+      "path": "registry/tessera/lib/utils.ts",
+      "content": "import { clsx, type ClassValue } from \"clsx\";\nimport { twMerge } from \"tailwind-merge\";\n\nexport function cn(...inputs: ClassValue[]) {\n  return twMerge(clsx(inputs));\n}\n",
+      "type": "registry:lib",
+      "target": "lib/utils.ts"
+    }
+  ],
+  "type": "registry:component"
+}

@@ -1,0 +1,49 @@
+---
+title: Hold Button
+description: Asymmetric hold-to-confirm button with linear press fill and snappy ease-out release.
+---
+
+# Hold Button
+
+An asymmetric press-and-hold confirmation control: slow linear fill while the user decides (`1000ms` default), and an instant `180ms ease-out` reset if released early.
+
+## Preview
+
+<ComponentPreview name="hold-button-demo" />
+
+## Installation
+
+<InstallationTabs
+  componentName="hold-button"
+  dependencies={["react-icons", "clsx", "tailwind-merge"]}
+/>
+
+## Props
+
+<PropsTable
+  props={[
+    {
+      name: "label",
+      type: "string",
+      default: "\"Hold to confirm\"",
+      description: "Button label before confirmation.",
+    },
+    {
+      name: "confirmedLabel",
+      type: "string",
+      default: "\"Confirmed\"",
+      description: "Button label displayed after the hold completes.",
+    },
+    {
+      name: "durationMs",
+      type: "number",
+      default: "1000",
+      description: "Duration in milliseconds required to confirm.",
+    },
+    {
+      name: "onConfirm",
+      type: "() => void",
+      description: "Callback invoked once the hold completes.",
+    },
+  ]}
+/>

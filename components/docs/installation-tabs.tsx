@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { cn } from "@/registry/bitsandpieces/lib/utils";
+import { cn } from "@/registry/tessera/lib/utils";
 import { BiCheck, BiCopy, BiCode } from "react-icons/bi";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
 import { CodeViewer, escapeHtml } from "./code-viewer";

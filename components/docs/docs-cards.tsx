@@ -1,97 +1,91 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
-import { FiBox, FiLayout, FiLayers, FiTerminal } from "react-icons/fi";
+import { FiArrowUpRight, FiBox, FiCode, FiTerminal } from "react-icons/fi";
+import { BiLogoGithub } from "react-icons/bi";
 
 const cards = [
   {
     title: "Installation",
     description:
-      "Learn how to integrate Bits&Pieces into your React or Next.js project.",
-    icon: <FiTerminal className="w-5 h-5" />,
+      "Set up Tailwind CSS v4, Motion, and the shadcn registry in your Next.js or React app.",
+    icon: FiTerminal,
     href: "/docs/installation",
-    color: "from-blue-500/10 to-transparent",
-    border: "group-hover:border-blue-500/30",
+    external: false,
   },
   {
-    title: "Components",
+    title: "Live Showcase",
     description:
-      "Browse our collection of accessible, copy-paste ready UI components.",
-    icon: <FiBox className="w-5 h-5" />,
-    href: "/docs/components",
-    color: "from-emerald-500/10 to-transparent",
-    border: "group-hover:border-emerald-500/30",
+      "Test morphing pills, spring card stacks, hold-to-confirm, and dynamic trays.",
+    icon: FiCode,
+    href: "/#showcase",
+    external: false,
   },
   {
-    title: "Blocks",
+    title: "Registry CLI",
     description:
-      "Pre-built, responsive sections to drop right into your pages.",
-    icon: <FiLayout className="w-5 h-5" />,
-    href: "/docs/blocks",
-    color: "from-amber-500/10 to-transparent",
-    border: "group-hover:border-amber-500/30",
+      "Learn how Tessera distributes flat TypeScript files directly into your repo.",
+    icon: FiBox,
+    href: "/#install",
+    external: false,
   },
   {
-    title: "Templates",
+    title: "Source Repository",
     description:
-      "Full-page layouts designed for SaaS, portfolios, and dashboards.",
-    icon: <FiLayers className="w-5 h-5" />,
-    href: "/docs/templates",
-    color: "from-purple-500/10 to-transparent",
-    border: "group-hover:border-purple-500/30",
+      "Inspect the registry schema, component architecture, and Tailwind v4 tokens.",
+    icon: BiLogoGithub,
+    href: "https://github.com/itstheanurag/bitsandpieces",
+    external: true,
   },
 ];
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-    },
-  },
-};
-
-const itemVariants: any = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
-};
-
 export function DocsCards() {
   return (
-    <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-      className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8"
-    >
-      {cards.map((card) => (
-        <Link key={card.title} href={card.href} className="outline-none block">
-          <motion.div
-            variants={itemVariants}
-            className={`group relative h-full flex flex-col p-6 rounded-2xl border border-border bg-card hover:bg-muted/30 transition-all duration-300 overflow-hidden ${card.border}`}
-          >
-            {/* Top right gradient accent */}
-            <div
-              className={`absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br ${card.color} rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none`}
-            />
-
-            <div className="flex items-center gap-3 mb-3">
-              <div className="p-2 rounded-lg bg-muted text-foreground border border-border/50 group-hover:scale-110 transition-transform duration-300">
-                {card.icon}
+    <div className="mt-8 mb-10 rounded-[18px] border border-black/[0.07] bg-[#ececf0] p-2.5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+        {cards.map((card) => {
+          const Icon = card.icon;
+          const inner = (
+            <div className="tessera-press group h-full rounded-[13px] border border-black/[0.06] bg-white p-5 transition-[border-color,box-shadow] duration-150 hover:border-black/[0.12] hover:shadow-[0_6px_18px_-6px_rgba(17,17,19,0.1)] flex flex-col justify-between gap-4">
+              <div className="flex items-start justify-between gap-3">
+                <div className="inline-flex h-9 w-9 items-center justify-center rounded-[10px] border border-border bg-surface text-foreground">
+                  <Icon className="h-4 w-4" />
+                </div>
+                <FiArrowUpRight className="h-4 w-4 text-muted-foreground transition-transform duration-150 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-foreground" />
               </div>
-              <h3 className="font-semibold text-lg text-foreground m-0">
-                {card.title}
-              </h3>
-            </div>
 
-            <p className="text-muted-foreground text-sm leading-relaxed m-0 flex-1">
-              {card.description}
-            </p>
-          </motion.div>
-        </Link>
-      ))}
-    </motion.div>
+              <div className="space-y-1">
+                <h3 className="text-[15px] font-semibold tracking-[-0.015em] text-foreground">
+                  {card.title}
+                </h3>
+                <p className="text-[13.5px] leading-relaxed text-muted-foreground">
+                  {card.description}
+                </p>
+              </div>
+            </div>
+          );
+
+          return card.external ? (
+            <a
+              key={card.title}
+              href={card.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block rounded-[14px] bg-white/60 p-[1px]"
+            >
+              {inner}
+            </a>
+          ) : (
+            <Link
+              key={card.title}
+              href={card.href}
+              className="block rounded-[14px] bg-white/60 p-[1px]"
+            >
+              {inner}
+            </Link>
+          );
+        })}
+      </div>
+    </div>
   );
 }

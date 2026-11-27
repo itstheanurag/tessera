@@ -1,0 +1,37 @@
+---
+title: Spring Card Stack
+description: Interactive depth-layered card deck driven by spring physics.
+---
+
+# Spring Card Stack
+
+A depth-layered card deck where clicking cycles cards smoothly with spring scale, vertical offset, and opacity transitions.
+
+## Preview
+
+<ComponentPreview name="spring-card-stack-demo" />
+
+## Installation
+
+<InstallationTabs
+  componentName="spring-card-stack"
+  dependencies={["motion", "clsx", "tailwind-merge"]}
+/>
+
+## Props
+
+<PropsTable
+  props={[
+    {
+      name: "cards",
+      type: "StackCardItem[]",
+      description: "Array of { id, title, meta?, description } items.",
+      required: true,
+    },
+    {
+      name: "className",
+      type: "string",
+      description: "Additional classes merged onto the outer wrapper.",
+    },
+  ]}
+/>

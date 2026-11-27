@@ -1,0 +1,47 @@
+---
+title: Segmented Dock
+description: Shared-layout spring tab switcher with keyboard roles and reduced-motion support.
+---
+
+# Segmented Dock
+
+A tactile segmented tab bar powered by Motion's shared `layoutId` spring pill.
+
+## Preview
+
+<ComponentPreview name="segmented-dock-demo" />
+
+## Installation
+
+<InstallationTabs
+  componentName="segmented-dock"
+  dependencies={["motion", "clsx", "tailwind-merge"]}
+/>
+
+## Props
+
+<PropsTable
+  props={[
+    {
+      name: "items",
+      type: "DockItem[]",
+      description: "Array of { id, label, icon? } tabs to render.",
+      required: true,
+    },
+    {
+      name: "value",
+      type: "string",
+      description: "Controlled active tab id.",
+    },
+    {
+      name: "defaultValue",
+      type: "string",
+      description: "Initial active tab id for uncontrolled usage.",
+    },
+    {
+      name: "onValueChange",
+      type: "(id: string) => void",
+      description: "Callback fired when a tab is selected.",
+    },
+  ]}
+/>

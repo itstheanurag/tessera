@@ -1,88 +1,126 @@
 "use client";
 
+import type { IconType } from "react-icons";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FiMenu, FiX } from "react-icons/fi";
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import {
+  FiBookOpen,
+  FiBox,
+  FiLayers,
+  FiLayout,
+  FiSliders,
+  FiTerminal,
+  FiZap,
+} from "react-icons/fi";
+import { cn } from "@/registry/tessera/lib/utils";
+import {
+  type ComponentCategory,
+  getRegistryGroupedByCategory,
+} from "@/registry/registry-data";
 
-const navigation = [
-  {
-    title: "Getting Started",
-    links: [
-      { title: "Introduction", href: "/docs" },
-      { title: "Installation", href: "/docs/installation" },
-    ],
-  },
-  {
-    title: "Components",
-    links: [{ title: "Animated Form", href: "/docs/components/animated-form" }],
-  },
+const GETTING_STARTED: { title: string; href: string; icon: IconType }[] = [
+  { title: "Introduction", href: "/docs", icon: FiBookOpen },
+  { title: "Installation", href: "/docs/installation", icon: FiTerminal },
 ];
 
-export function DocsSidebar() {
-  const pathname = usePathname();
-  const [isOpen, setIsOpen] = useState(false);
+const CATEGORY_ICONS: Record<ComponentCategory, IconType> = {
+  "inputs-and-forms": FiSliders,
+  "navigation-and-layout": FiLayout,
+  "overlays-and-feedback": FiLayers,
+  "cards-and-display": FiBox,
+  "motion-and-effects": FiZap,
+};
 
-  const navContent = (
-    <nav className="space-y-8 pr-4 pb-20">
-      {navigation.map((section) => (
-        <div key={section.title} className="flex flex-col">
-          <h4 className="text-[0.8rem] font-medium text-foreground mb-3 px-2">
-            {section.title}
-          </h4>
-          <ul className="space-y-0.5">
-            {section.links.map((link) => {
-              const isActive = pathname === link.href;
-              return (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    onClick={() => setIsOpen(false)}
-                    className={`block px-2 py-1.5 text-[0.85rem] transition-colors rounded-lg ${
-                      isActive
-                        ? "text-foreground bg-accent/50 font-medium"
-                        : "text-muted-foreground hover:text-foreground hover:bg-muted"
-                    }`}
-                  >
-                    {link.title}
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-      ))}
-    </nav>
-  );
+interface DocsSidebarProps {
+  onNavigate?: () => void;
+}
+
+export function DocsSidebar({ onNavigate }: DocsSidebarProps) {
+  const pathname = usePathname();
+  const grouped = getRegistryGroupedByCategory();
 
   return (
-    <>
-      {/* Mobile toggle */}
-      <button
-        className="lg:hidden fixed bottom-6 right-6 z-50 p-3 bg-primary text-primary-foreground rounded-full shadow-xl"
-        onClick={() => setIsOpen(!isOpen)}
-        aria-label="Toggle Menu"
-      >
-        {isOpen ? <FiX size={24} /> : <FiMenu size={24} />}
-      </button>
+    <nav aria-label="Documentation sections" className="space-y-6">
+      {/* Getting Started */}
+      <div className="space-y-1.5">
+        <p className="px-2.5 text-[11px] font-semibold tracking-wide text-foreground/50 uppercase">
+          Getting Started
+        </p>
+        <ul className="space-y-1">
+          {GETTING_STARTED.map((link) => {
+            const isActive = pathname === link.href;
+            const Icon = link.icon;
+            return (
+              <li key={link.href}>
+                <Link
+                  href={link.href}
+                  onClick={onNavigate}
+                  className={cn(
+                    "flex items-center gap-2.5 rounded-[10px] px-2.5 py-2 text-[13.5px] transition-colors",
+                    isActive
+                      ? "bg-white font-medium text-foreground shadow-[0_1px_2px_rgba(17,17,19,0.06),0_0_0_1px_rgba(17,17,19,0.07)]"
+                      : "text-foreground/70 hover:bg-black/[0.04] hover:text-foreground",
+                  )}
+                >
+                  <Icon
+                    className={cn(
+                      "h-3.5 w-3.5",
+                      isActive ? "text-foreground" : "text-foreground/45",
+                    )}
+                  />
+                  <span>{link.title}</span>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
 
-      {/* Desktop Version */}
-      <div className="hidden lg:block h-full pr-4">{navContent}</div>
+      {/* Single-category component sections */}
+      {grouped.map(({ category, items }) => {
+        const CategoryIcon = CATEGORY_ICONS[category.id];
+        return (
+          <div key={category.id} className="space-y-1.5">
+            <p className="flex items-center gap-1.5 px-2.5 text-[11px] font-semibold tracking-wide text-foreground/50 uppercase">
+              <CategoryIcon className="h-3 w-3 text-foreground/40" />
+              <span>{category.label}</span>
+            </p>
 
-      {/* Mobile Version overlay */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            className="fixed inset-0 z-40 bg-background/95 backdrop-blur-md p-6 pt-24 mt-0 lg:hidden overflow-y-auto"
-          >
-            {navContent}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
+            {items.length > 0 ? (
+              <ul className="space-y-1">
+                {items.map((item) => {
+                  const isActive = pathname === item.href;
+                  return (
+                    <li key={item.name}>
+                      <Link
+                        href={item.href}
+                        onClick={onNavigate}
+                        className={cn(
+                          "flex items-center justify-between rounded-[10px] px-2.5 py-2 text-[13.5px] transition-colors",
+                          isActive
+                            ? "bg-white font-medium text-foreground shadow-[0_1px_2px_rgba(17,17,19,0.06),0_0_0_1px_rgba(17,17,19,0.07)]"
+                            : "text-foreground/70 hover:bg-black/[0.04] hover:text-foreground",
+                        )}
+                      >
+                        <span>{item.title}</span>
+                        {item.badge && (
+                          <span className="rounded-full bg-foreground px-2 py-0.5 font-mono text-[10px] font-medium text-background">
+                            {item.badge}
+                          </span>
+                        )}
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            ) : (
+              <p className="px-2.5 py-1 text-xs text-foreground/40">
+                No components yet
+              </p>
+            )}
+          </div>
+        );
+      })}
+    </nav>
   );
 }

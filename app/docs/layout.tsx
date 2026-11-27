@@ -4,31 +4,34 @@ import { DocsSidebar } from "@/components/docs/sidebar";
 import { TableOfContents } from "@/components/docs/toc";
 
 export const metadata = {
-  title: "Bits&Pieces Documentation",
-  description: "Premium React UI Components - Documentation",
+  title: "Tessera Documentation",
+  description:
+    "Guides, installation, and source-owned React UI components built with Tailwind CSS v4 and Motion.",
 };
 
 export default function DocsLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="flex flex-col min-h-screen bg-background">
+    <div className="min-h-screen bg-[#f4f4f6] text-foreground flex flex-col">
       <DocsNavbar />
 
-      <div className="w-full flex-1 flex gap-8 px-4 sm:px-6 lg:px-8 xl:px-12 bg-background">
-        {/* Left Sidebar - Detached borderless */}
-        <aside className="hidden lg:block w-64 xl:w-72 shrink-0 py-10 sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto hidden-scrollbar">
-          <DocsSidebar />
+      <div className="w-full flex-1 flex">
+        {/* Left sidebar — pinned to the left edge */}
+        <aside className="hidden lg:block w-[264px] shrink-0 border-r border-black/[0.08] bg-[#f4f4f6]">
+          <div className="sticky top-14 h-[calc(100vh-3.5rem)] overflow-y-auto px-5 py-7">
+            <DocsSidebar />
+          </div>
         </aside>
 
-        {/* Main content pane */}
-        <main className="flex-1 min-w-0 py-10 lg:px-8 xl:px-12">
-          <article className="max-w-4xl mx-auto w-full relative">
-            {children}
-          </article>
+        {/* Center main reading section */}
+        <main className="flex-1 min-w-0 bg-white">
+          <div className="mx-auto max-w-[820px] px-6 sm:px-10 lg:px-14 py-10 sm:py-14">
+            <article className="w-full">{children}</article>
+          </div>
         </main>
 
-        {/* Right Sidebar - TOC */}
-        <aside className="hidden xl:block w-64 shrink-0 py-10 sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto hidden-scrollbar">
-          <div className="relative h-full">
+        {/* Right TOC sidebar — pinned to the right edge */}
+        <aside className="hidden xl:block w-[256px] shrink-0 border-l border-black/[0.08] bg-[#f4f4f6]">
+          <div className="sticky top-14 h-[calc(100vh-3.5rem)] overflow-y-auto px-6 py-8">
             <TableOfContents />
           </div>
         </aside>

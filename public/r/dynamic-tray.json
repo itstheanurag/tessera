@@ -1,0 +1,26 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "dynamic-tray",
+  "title": "Dynamic Tray",
+  "description": "Multi-view morphing sheet with smooth spring height interpolation.",
+  "dependencies": [
+    "motion",
+    "clsx",
+    "tailwind-merge"
+  ],
+  "files": [
+    {
+      "path": "registry/tessera/overlays-and-feedback/dynamic-tray/dynamic-tray.tsx",
+      "content": "\"use client\";\n\nimport React, { useState } from \"react\";\nimport { motion, AnimatePresence, useReducedMotion } from \"motion/react\";\nimport { cn } from \"@/registry/tessera/lib/utils\";\n\nexport interface TrayView {\n  id: string;\n  title: string;\n  content: (navigate: (viewId: string) => void) => React.ReactNode;\n}\n\nexport interface DynamicTrayProps {\n  views: TrayView[];\n  initialViewId?: string;\n  className?: string;\n}\n\nexport function DynamicTray({\n  views,\n  initialViewId,\n  className,\n}: DynamicTrayProps) {\n  const reduceMotion = useReducedMotion();\n  const [activeId, setActiveId] = useState(\n    initialViewId ?? views[0]?.id ?? \"\",\n  );\n\n  const currentView = views.find((v) => v.id === activeId) ?? views[0];\n\n  if (!currentView) return null;\n\n  const spring = reduceMotion\n    ? { duration: 0.08 }\n    : { type: \"spring\" as const, stiffness: 420, damping: 32 };\n\n  return (\n    <motion.div\n      layout\n      transition={spring}\n      className={cn(\n        \"w-full max-w-[400px] overflow-hidden rounded-[24px] border border-black/[0.07] bg-white p-5 shadow-[0_12px_36px_-10px_rgba(17,17,19,0.12),0_1px_3px_rgba(17,17,19,0.05)]\",\n        className,\n      )}\n    >\n      <AnimatePresence mode=\"popLayout\" initial={false}>\n        <motion.div\n          key={currentView.id}\n          initial={\n            reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.97 }\n          }\n          animate={{ opacity: 1, scale: 1 }}\n          exit={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.97 }}\n          transition={{ duration: 0.16, ease: [0.23, 1, 0.32, 1] }}\n        >\n          {currentView.content(setActiveId)}\n        </motion.div>\n      </AnimatePresence>\n    </motion.div>\n  );\n}\n",
+      "type": "registry:component",
+      "target": "components/tessera/dynamic-tray.tsx"
+    },
+    {
+      "path": "registry/tessera/lib/utils.ts",
+      "content": "import { clsx, type ClassValue } from \"clsx\";\nimport { twMerge } from \"tailwind-merge\";\n\nexport function cn(...inputs: ClassValue[]) {\n  return twMerge(clsx(inputs));\n}\n",
+      "type": "registry:lib",
+      "target": "lib/utils.ts"
+    }
+  ],
+  "type": "registry:component"
+}

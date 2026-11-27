@@ -1,9 +1,11 @@
 "use client";
 
-import React, { useState, Suspense } from "react";
+import React, { useState, useEffect, Suspense, useId } from "react";
+import { motion, useReducedMotion } from "motion/react";
 import { registry } from "@/registry/registry-data";
 import { exampleRegistry } from "@/registry/example-registry";
-import { CodeViewer } from "./code-viewer";
+import { CodeViewer, escapeHtml } from "./code-viewer";
+import { cn } from "@/registry/tessera/lib/utils";
 
 interface ComponentPreviewProps {
   name: string;
@@ -12,181 +14,167 @@ interface ComponentPreviewProps {
 
 export function ComponentPreview({ name, className }: ComponentPreviewProps) {
   const [activeTab, setActiveTab] = useState<"preview" | "code">("preview");
+  const [code, setCode] = useState<string>("");
+  const [highlightedHtml, setHighlightedHtml] = useState<string>("");
+  const reduceMotion = useReducedMotion();
+  const tabId = useId();
 
-  // Check if it's a registry component or an example
   const registryItem = registry[name];
   const exampleItem = exampleRegistry[name];
-
   const item = registryItem || exampleItem;
-
-  if (!item) {
-    return (
-      <div className="p-4 border border-destructive rounded-lg text-destructive">
-        Component "{name}" not found.
-      </div>
-    );
-  }
-
   const isExample = !!exampleItem;
-  const PreviewComponent = item.component;
+  const itemPath = item?.path ?? "";
 
-  if (!PreviewComponent) {
-    return (
-      <div className="p-4 border border-destructive rounded-lg text-destructive">
-        Component "{name}" has no preview.
-      </div>
-    );
-  }
+  // Prefetch highlighted code on mount so switching Preview -> Code has zero flicker
+  useEffect(() => {
+    if (!itemPath) return;
+    let active = true;
 
-  return (
-    <div className={className}>
-      <div className="mb-2 flex items-center gap-2">
-        {isExample && (
-          <span className="text-xs px-2 py-0.5 rounded-full bg-muted text-muted-foreground">
-            Example
-          </span>
-        )}
-        <span className="text-sm font-medium text-muted-foreground">
-          {item.title}
-        </span>
-      </div>
-
-      {/* Tab Header */}
-      <div className="flex items-center justify-between border-b border-border bg-muted/30 px-4 py-2.5 rounded-t-xl border border-border">
-        <div className="flex gap-1 bg-muted/50 p-1 rounded-lg">
-          <button
-            onClick={() => setActiveTab("preview")}
-            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md transition-all ${
-              activeTab === "preview"
-                ? "bg-background text-foreground shadow-sm"
-                : "text-muted-foreground hover:text-foreground hover:bg-background/50"
-            }`}
-          >
-            <span className="w-2.5 h-2.5 rounded-full border-2 border-current" />
-            Preview
-          </button>
-          <button
-            onClick={() => setActiveTab("code")}
-            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md transition-all ${
-              activeTab === "code"
-                ? "bg-background text-foreground shadow-sm"
-                : "text-muted-foreground hover:text-foreground hover:bg-background/50"
-            }`}
-          >
-            <svg
-              className="h-3.5 w-3.5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
-              />
-            </svg>
-            Code
-          </button>
-        </div>
-      </div>
-
-      {/* Content */}
-      <div className="rounded-b-xl border-x border-b border-border overflow-hidden bg-[#0d1117]">
-        {activeTab === "preview" ? (
-          <div className="flex items-center justify-center min-h-[350px] p-8 bg-background bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-[size:24px_24px] bg-center">
-            <Suspense
-              fallback={
-                <div className="animate-pulse text-muted-foreground">
-                  Loading...
-                </div>
-              }
-            >
-              <PreviewComponent />
-            </Suspense>
-          </div>
-        ) : (
-          <CodeViewerFetcher
-            examplePath={item.path}
-            isExample={isExample}
-            exampleName={name}
-          />
-        )}
-      </div>
-    </div>
-  );
-}
-
-// Fetches code and passes to CodeViewer
-function CodeViewerFetcher({
-  examplePath,
-  isExample,
-  exampleName,
-}: {
-  examplePath: string;
-  isExample: boolean;
-  exampleName: string;
-}) {
-  const [code, setCode] = React.useState<string>("");
-  const [highlightedHtml, setHighlightedHtml] = React.useState<string>("");
-
-  React.useEffect(() => {
     if (isExample) {
-      // For examples, fetch from API
-      fetch(`/api/code?path=${encodeURIComponent(examplePath)}`)
+      fetch(`/api/code?path=${encodeURIComponent(itemPath)}`)
         .then((res) => res.json())
         .then((result) => {
+          if (!active) return;
           setCode(result.code || "");
           setHighlightedHtml(result.html || "");
         })
-        .catch((err) => {
-          console.error("Error fetching code:", err);
-          setHighlightedHtml("<pre>Error loading code</pre>");
-        });
+        .catch(() => {});
     } else {
-      // For main components, fetch from public registry JSON
-      fetch(`/r/${exampleName}.json`)
+      fetch(`/r/${name}.json`)
         .then((res) => res.json())
         .then((registryData) => {
           const file = registryData.files?.find(
             (f: { type: string }) => f.type === "registry:component",
           );
-          if (file?.content) {
-            setCode(file.content);
-            // Fetch highlighted HTML from API
-            fetch("/api/code", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ code: file.content }),
+          if (!active || !file?.content) return;
+          setCode(file.content);
+          fetch("/api/code", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ code: file.content }),
+          })
+            .then((res) => res.json())
+            .then((highlightResult) => {
+              if (!active) return;
+              setHighlightedHtml(
+                highlightResult.html ||
+                  `<pre>${escapeHtml(file.content)}</pre>`,
+              );
             })
-              .then((res) => res.json())
-              .then((highlightResult) => {
-                setHighlightedHtml(highlightResult.html || "");
-              })
-              .catch(() => {
-                setHighlightedHtml(
-                  `<pre class="p-4 text-sm font-mono text-gray-300">${escapeHtml(file.content)}</pre>`,
-                );
-              });
-          } else {
-            setHighlightedHtml("<pre>Code not found</pre>");
-          }
+            .catch(() => {});
         })
-        .catch((err) => {
-          console.error("Error fetching component code:", err);
-          setHighlightedHtml("<pre>Error loading code</pre>");
-        });
+        .catch(() => {});
     }
-  }, [examplePath, isExample, exampleName]);
 
-  return <CodeViewer code={code} highlightedHtml={highlightedHtml} />;
+    return () => {
+      active = false;
+    };
+  }, [itemPath, isExample, name]);
+
+  if (!item) {
+    return (
+      <div className="my-6 rounded-[14px] border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
+        Component &ldquo;{name}&rdquo; not found.
+      </div>
+    );
+  }
+
+  const PreviewComponent = item.component;
+
+  if (!PreviewComponent) {
+    return (
+      <div className="my-6 rounded-[14px] border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
+        Component &ldquo;{name}&rdquo; has no preview.
+      </div>
+    );
+  }
+
+  const filename = item.path.split("/").pop() ?? `${name}.tsx`;
+
+  return (
+    <div className={cn("my-6", className)}>
+      {/* Recessed stone bezel + dotted workbench preview stage */}
+      <div className="rounded-[20px] border border-black/[0.07] bg-[#e9e9ee] p-1.5">
+        <div className="overflow-hidden rounded-[15px] border border-black/[0.07] bg-white">
+          {/* Header bar */}
+          <div className="flex items-center justify-between gap-3 border-b border-black/[0.07] bg-[#f4f4f6] px-4 py-2.5">
+            <div className="flex items-center gap-2 min-w-0">
+              <span className="truncate text-[13px] font-medium text-foreground">
+                {item.title}
+              </span>
+              {isExample && (
+                <span className="rounded-full border border-black/[0.07] bg-white px-2 py-0.5 font-mono text-[10.5px] text-muted-foreground">
+                  example
+                </span>
+              )}
+            </div>
+
+            <div className="inline-flex items-center gap-1 rounded-full bg-[#e6e6eb] p-0.5">
+              {(["preview", "code"] as const).map((tab) => {
+                const active = activeTab === tab;
+                return (
+                  <button
+                    key={tab}
+                    type="button"
+                    onClick={() => setActiveTab(tab)}
+                    className={cn(
+                      "relative rounded-full px-3 py-1 text-xs font-medium capitalize transition-colors",
+                      active
+                        ? "text-foreground"
+                        : "text-muted-foreground hover:text-foreground",
+                    )}
+                  >
+                    {active && (
+                      <motion.span
+                        layoutId={`preview-tab-${tabId}`}
+                        transition={
+                          reduceMotion
+                            ? { duration: 0.08 }
+                            : { type: "spring", stiffness: 450, damping: 34 }
+                        }
+                        className="absolute inset-0 rounded-full bg-white shadow-[0_1px_2px_rgba(17,17,19,0.08)]"
+                      />
+                    )}
+                    <span className="relative z-10">{tab}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Content area — instant toggle with zero flicker */}
+          {activeTab === "preview" ? (
+            <div
+              className="flex min-h-[340px] items-center justify-center bg-[#ececf0] p-6 sm:p-10"
+              style={{
+                backgroundImage:
+                  "radial-gradient(rgba(17, 17, 19, 0.1) 1px, transparent 1px)",
+                backgroundSize: "16px 16px",
+              }}
+            >
+              <Suspense
+                fallback={
+                  <div className="text-sm text-muted-foreground">
+                    Loading preview…
+                  </div>
+                }
+              >
+                <PreviewComponent />
+              </Suspense>
+            </div>
+          ) : (
+            <CodeViewer
+              code={code}
+              highlightedHtml={highlightedHtml}
+              filename={filename}
+            />
+          )}
+        </div>
+      </div>
+    </div>
+  );
 }
 
-function escapeHtml(text: string): string {
-  return text.replace(/&/g, "&").replace(/</g, "<").replace(/>/g, ">");
-}
-
-// Simple preview wrapper for inline usage in MDX
 export function SimplePreview({
   children,
   className,
@@ -196,7 +184,10 @@ export function SimplePreview({
 }) {
   return (
     <div
-      className={`flex items-center justify-center min-h-[200px] p-8 rounded-lg border border-border bg-background ${className || ""}`}
+      className={cn(
+        "my-6 flex min-h-[200px] items-center justify-center rounded-[16px] border border-border bg-[#ececf0] p-8",
+        className,
+      )}
     >
       {children}
     </div>

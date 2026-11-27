@@ -1,0 +1,42 @@
+---
+title: Dynamic Tray
+description: Multi-view morphing sheet with smooth spring height interpolation.
+---
+
+# Dynamic Tray
+
+A multi-view container inspired by native iOS and Family.co sheets that smoothly animates height and view swaps via spring layout transitions.
+
+## Preview
+
+<ComponentPreview name="dynamic-tray-demo" />
+
+## Installation
+
+<InstallationTabs
+  componentName="dynamic-tray"
+  dependencies={["motion", "clsx", "tailwind-merge"]}
+/>
+
+## Props
+
+<PropsTable
+  props={[
+    {
+      name: "views",
+      type: "TrayView[]",
+      description: "Array of views with { id, title, content(navigate) }.",
+      required: true,
+    },
+    {
+      name: "initialViewId",
+      type: "string",
+      description: "View id rendered on mount (defaults to the first view).",
+    },
+    {
+      name: "className",
+      type: "string",
+      description: "Additional classes merged onto the tray container.",
+    },
+  ]}
+/>

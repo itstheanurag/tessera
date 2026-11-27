@@ -1,6 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
+import { FiArrowUp } from "react-icons/fi";
+import { cn } from "@/registry/tessera/lib/utils";
 
 interface TOCItem {
   id: string;
@@ -9,11 +12,12 @@ interface TOCItem {
 }
 
 export function TableOfContents() {
+  const pathname = usePathname();
   const [headings, setHeadings] = useState<TOCItem[]>([]);
   const [activeId, setActiveId] = useState<string>("");
 
   useEffect(() => {
-    // Wait slightly to ensure MDX has rendered
+    let observer: IntersectionObserver | null = null;
     const timeoutId = setTimeout(() => {
       const elements = Array.from(
         document.querySelectorAll("article h2, article h3"),
@@ -25,11 +29,12 @@ export function TableOfContents() {
           text: elem.textContent || "",
           level: Number(elem.tagName.charAt(1)),
         }))
-        .filter((item) => item.id); // Valid IDs only
+        .filter((item) => item.id);
 
       setHeadings(tocItems);
+      setActiveId(tocItems[0]?.id ?? "");
 
-      const observer = new IntersectionObserver(
+      observer = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
             if (entry.isIntersecting) {
@@ -37,50 +42,67 @@ export function TableOfContents() {
             }
           });
         },
-        { rootMargin: "0% 0% -80% 0%" },
+        { rootMargin: "0% 0% -75% 0%" },
       );
 
-      elements.forEach((elem) => observer.observe(elem));
-      return () => observer.disconnect();
-    }, 100);
+      elements.forEach((elem) => observer?.observe(elem));
+    }, 60);
 
-    return () => clearTimeout(timeoutId);
-  }, []);
+    return () => {
+      clearTimeout(timeoutId);
+      observer?.disconnect();
+    };
+  }, [pathname]);
 
   if (headings.length === 0) return null;
 
   return (
-    <div className="space-y-4">
-      <p className="font-semibold text-[0.8rem] uppercase tracking-wider text-foreground">
-        On this page
-      </p>
-      <div className="absolute left-0 top-14 bottom-0 w-[1px] bg-border" />
-      <ul className="space-y-3 text-[0.85rem] relative">
-        {headings.map((heading) => {
-          const isActive = activeId === heading.id;
-          return (
-            <li
-              key={heading.id}
-              className="relative"
-              style={{ paddingLeft: `${(heading.level - 2) * 0.75}rem` }}
-            >
-              {isActive && (
-                <div className="absolute -left-[1px] top-1 bottom-1 w-[2px] rounded-full bg-primary" />
-              )}
-              <a
-                href={`#${heading.id}`}
-                className={`block transition-colors pl-4 ${
-                  isActive
-                    ? "text-primary font-medium"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                {heading.text}
-              </a>
-            </li>
-          );
-        })}
-      </ul>
+    <div className="space-y-6">
+      <div className="space-y-3">
+        <p className="text-[11.5px] font-semibold tracking-wide text-foreground/50 uppercase">
+          On this page
+        </p>
+        <ul className="relative space-y-1 border-l border-black/[0.1]">
+          {headings.map((heading) => {
+            const isActive = activeId === heading.id;
+            return (
+              <li key={heading.id} className="relative">
+                {isActive && (
+                  <span
+                    aria-hidden="true"
+                    className="absolute -left-[1px] top-1.5 bottom-1.5 w-[2px] rounded-full bg-foreground"
+                  />
+                )}
+                <a
+                  href={`#${heading.id}`}
+                  style={{
+                    paddingLeft: heading.level === 3 ? "1.35rem" : "0.85rem",
+                  }}
+                  className={cn(
+                    "block py-1 text-[13px] leading-snug transition-colors",
+                    isActive
+                      ? "font-medium text-foreground"
+                      : "text-foreground/60 hover:text-foreground",
+                  )}
+                >
+                  {heading.text}
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+
+      <div className="border-t border-black/[0.08] pt-4">
+        <button
+          type="button"
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          className="inline-flex items-center gap-1.5 text-xs font-medium text-foreground/60 hover:text-foreground transition-colors"
+        >
+          <FiArrowUp className="h-3.5 w-3.5" />
+          <span>Back to top</span>
+        </button>
+      </div>
     </div>
   );
 }

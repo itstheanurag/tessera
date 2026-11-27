@@ -1,4 +1,5 @@
 import type { MDXComponents } from "mdx/types";
+import type { ComponentPropsWithoutRef } from "react";
 import {
   ComponentPreview,
   SimplePreview,
@@ -8,10 +9,17 @@ import { PropsTable } from "@/components/docs/props-table";
 import { CodeBlock } from "@/components/docs/code-block";
 import { DocsCards } from "@/components/docs/docs-cards";
 
+type CodeProps = ComponentPropsWithoutRef<"code"> & {
+  "data-language"?: string;
+};
+
+type FigureProps = ComponentPropsWithoutRef<"figure"> & {
+  "data-rehype-pretty-code-figure"?: string;
+};
+
 export function useMDXComponents(components?: MDXComponents): MDXComponents {
   return {
     ...components,
-    // Custom MDX widgets
     ComponentPreview,
     SimplePreview,
     InstallationTabs,
@@ -19,109 +27,103 @@ export function useMDXComponents(components?: MDXComponents): MDXComponents {
     CodeBlock,
     DocsCards,
 
-    // Native HTML Element Mappings
     h1: (props) => (
       <h1
-        className="text-4xl font-bold mt-12 mb-6 tracking-tight text-foreground"
+        className="text-balance text-[2rem] sm:text-[2.5rem] font-semibold leading-[1.1] tracking-[-0.03em] text-foreground mt-0 mb-4"
         {...props}
       />
     ),
     h2: (props) => (
       <h2
-        className="text-2xl font-semibold mt-12 mb-4 pb-2 border-b border-border/60 text-foreground"
+        className="scroll-mt-24 text-[1.4rem] font-semibold leading-[1.25] tracking-[-0.02em] text-foreground mt-14 mb-4 pb-2.5 border-b border-border/70"
         {...props}
       />
     ),
     h3: (props) => (
       <h3
-        className="text-xl font-semibold mt-8 mb-4 text-foreground"
+        className="scroll-mt-24 text-[1.125rem] font-semibold leading-[1.3] tracking-[-0.015em] text-foreground mt-9 mb-3"
         {...props}
       />
     ),
     p: (props) => (
       <p
-        className="text-[1.05rem] leading-relaxed mb-6 text-muted-foreground"
+        className="text-[15.5px] leading-[1.7] text-muted-foreground mb-5 max-w-[68ch]"
         {...props}
       />
     ),
     a: (props) => (
-      <a className="text-primary hover:underline font-medium" {...props} />
+      <a
+        className="font-medium text-foreground underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
+        {...props}
+      />
     ),
     ul: (props) => (
       <ul
-        className="list-disc pl-6 mb-6 space-y-2 text-muted-foreground"
+        className="list-disc pl-5 mb-6 space-y-2.5 text-[15px] leading-[1.65] text-muted-foreground max-w-[68ch]"
         {...props}
       />
     ),
     ol: (props) => (
       <ol
-        className="list-decimal pl-6 mb-6 space-y-2 text-muted-foreground"
+        className="list-decimal pl-5 mb-6 space-y-2.5 text-[15px] leading-[1.65] text-muted-foreground max-w-[68ch]"
         {...props}
       />
     ),
-    li: (props) => <li className="text-[1.05rem] leading-relaxed" {...props} />,
+    li: (props) => <li className="pl-1" {...props} />,
     strong: (props) => (
       <strong className="font-semibold text-foreground" {...props} />
     ),
     blockquote: (props) => (
       <blockquote
-        className="border-l-4 border-primary bg-primary/10 px-6 py-4 rounded-r-lg my-6 italic text-foreground"
+        className="my-6 rounded-[14px] border border-border bg-surface px-5 py-4 text-[14.5px] leading-relaxed text-foreground"
         {...props}
       />
     ),
-    code: (props: any) => {
-      // Syntax highlighted blocks inherit `data-theme` and `data-language`
+    code: (props: CodeProps) => {
       if (props["data-language"]) {
-        return <code className="font-mono text-[0.85em]" {...props} />;
+        return <code className="font-mono text-[13px] leading-relaxed" {...props} />;
       }
       return (
         <code
-          className="bg-muted px-1.5 py-0.5 rounded-md font-mono text-[0.85em] text-foreground"
+          className="rounded-md border border-border/80 bg-surface px-1.5 py-0.5 font-mono text-[0.84em] text-foreground"
           {...props}
         />
       );
     },
-    figure: (props: any) => {
+    figure: (props: FigureProps) => {
       if ("data-rehype-pretty-code-figure" in props) {
         return (
           <figure
-            className="relative mt-6 mb-8 rounded-xl overflow-hidden border border-border shadow-md bg-[#0d1117]"
+            className="tessera-scrollbar relative my-6 overflow-hidden rounded-[14px] border border-black/[0.08] bg-[#f6f6f8] text-[#111113]"
             {...props}
-          >
-            <div className="absolute top-4 left-4 flex gap-1.5 z-10">
-              <div className="w-2.5 h-2.5 rounded-full bg-[#ff5f56]" />
-              <div className="w-2.5 h-2.5 rounded-full bg-[#ffbd2e]" />
-              <div className="w-2.5 h-2.5 rounded-full bg-[#27c93f]" />
-            </div>
-            {props.children}
-          </figure>
+          />
         );
       }
       return <figure {...props} />;
     },
     pre: (props) => (
       <pre
-        className="pt-12 pb-4 px-4 overflow-x-auto text-[0.9em]"
+        className="tessera-scrollbar overflow-x-auto px-4 py-3.5 font-mono text-[13px] leading-[1.65]"
         {...props}
       />
     ),
     table: (props) => (
-      <div className="my-6 w-full overflow-y-auto rounded-lg border border-border">
+      <div className="my-6 w-full overflow-x-auto rounded-[14px] border border-border bg-white">
         <table
-          className="w-full text-sm text-left border-collapse"
+          className="w-full text-left text-[13.5px] border-collapse"
           {...props}
         />
       </div>
     ),
     th: (props) => (
       <th
-        className="bg-muted/50 px-4 py-3 font-medium text-foreground border-b border-border"
+        className="bg-surface px-4 py-3 font-semibold text-foreground border-b border-border"
         {...props}
       />
     ),
     td: (props) => (
       <td
-        className="px-4 py-3 border-b border-border/50 text-muted-foreground"
+        className="px-4 py-3 border-b border-border/60 text-muted-foreground align-top"
         {...props}
       />
     ),
