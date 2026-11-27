@@ -22,6 +22,15 @@ export const Footer: React.FC = () => {
         </div>
 
         <div className="flex flex-wrap items-center gap-6 text-xs text-muted-foreground">
+          <Link href="/icons" className="hover:text-foreground transition-colors">
+            Icons
+          </Link>
+          <Link
+            href="/backgrounds"
+            className="hover:text-foreground transition-colors"
+          >
+            Backgrounds
+          </Link>
           <Link href="/docs" className="hover:text-foreground transition-colors">
             Documentation
           </Link>

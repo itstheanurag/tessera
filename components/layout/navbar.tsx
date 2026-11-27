@@ -256,6 +256,14 @@ export const Navbar: React.FC = () => {
                 </Link>
 
                 <Link
+                  href="/backgrounds"
+                  onClick={() => setOpenMenu(null)}
+                  className="inline-flex h-9 items-center rounded-[10px] px-3 text-[13.5px] font-medium text-foreground/80 transition-colors hover:bg-surface/80 hover:text-foreground"
+                >
+                  Backgrounds
+                </Link>
+
+                <Link
                   href="/docs"
                   onClick={() => setOpenMenu(null)}
                   className="inline-flex h-9 items-center rounded-[10px] px-3 text-[13.5px] font-medium text-foreground/80 transition-colors hover:bg-surface/80 hover:text-foreground"
@@ -487,6 +495,16 @@ export const Navbar: React.FC = () => {
                       title: "Registry",
                       note: "CLI & source files",
                       href: "/#install",
+                    },
+                    {
+                      title: "Icons",
+                      note: "118 bespoke Motion SVGs",
+                      href: "/icons",
+                    },
+                    {
+                      title: "Backgrounds",
+                      note: "Modern CSS & mesh",
+                      href: "/backgrounds",
                     },
                     {
                       title: "Docs",
