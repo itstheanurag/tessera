@@ -1,25 +1,44 @@
 import React from "react";
-import Image from "next/image";
+import Link from "next/link";
+import { TesseraMark } from "@/components/brand/tessera-mark";
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="border-t border-zinc-900 bg-zinc-950 py-10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4 opacity-80 hover:opacity-100 transition-opacity">
-        <div className="flex items-center gap-2">
-          <Image
-            src="/logo.png"
-            alt="Logo"
-            width={24}
-            height={24}
-            className="rounded-md"
-          />
-          <span className="text-sm font-semibold text-zinc-400 tracking-tight">
-            bits&pieces
+    <footer className="border-t border-black/[0.06] bg-white/75 backdrop-blur-md py-12">
+      <div className="mx-auto max-w-[1160px] px-6 sm:px-8 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-3">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 text-foreground"
+          >
+            <TesseraMark className="h-4 w-4" />
+            <span className="text-sm font-semibold tracking-[-0.02em]">
+              Tessera
+            </span>
+          </Link>
+          <span className="text-xs text-muted-foreground">
+            Open-source React components
           </span>
         </div>
 
-        <div className="text-xs text-zinc-600">
-          © 2024 Open Source • MIT License
+        <div className="flex flex-wrap items-center gap-6 text-xs text-muted-foreground">
+          <Link href="/docs" className="hover:text-foreground transition-colors">
+            Documentation
+          </Link>
+          <Link
+            href="/docs/installation"
+            className="hover:text-foreground transition-colors"
+          >
+            Installation
+          </Link>
+          <a
+            href="https://github.com/itstheanurag/bitsandpieces"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-foreground transition-colors"
+          >
+            GitHub
+          </a>
         </div>
       </div>
     </footer>
