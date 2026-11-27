@@ -15,15 +15,6 @@ const nextConfig: NextConfig = {
   },
   reactStrictMode: true,
   compress: true,
-  experimental: {
-    optimizeCss: true,
-    optimizePackageImports: [
-      "@radix-ui/react-tabs",
-      "@radix-ui/react-label",
-      "react-icons",
-      "motion",
-    ],
-  },
 };
 
 const withMDX = createMDX({
@@ -37,7 +28,7 @@ const withMDX = createMDX({
       [
         "rehype-pretty-code",
         {
-          theme: "github-dark",
+          theme: "github-light",
           keepBackground: false,
         },
       ],

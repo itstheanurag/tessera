@@ -1,54 +1,40 @@
 import type { Metadata } from "next";
-import { Outfit, JetBrains_Mono } from "next/font/google";
+import "@fontsource/outfit/400.css";
+import "@fontsource/outfit/500.css";
+import "@fontsource/outfit/600.css";
+import "@fontsource/outfit/700.css";
+import "@fontsource/jetbrains-mono/400.css";
+import "@fontsource/jetbrains-mono/500.css";
 import "./globals.css";
-import { ThemeProvider } from "@/components/root/theme/provider";
-
-const outfit = Outfit({
-  variable: "--font-outfit",
-  subsets: ["latin"],
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  variable: "--font-jetbrains-mono",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
-  title: "Bits&Pieces - Premium React UI Components",
+  title: "Tessera — Tactile React UI components built for AI workflows",
   description:
-    "A high-performance toolkit for React developers who demand speed, accessibility, and pixel-perfect aesthetics. Built with Next.js, Tailwind CSS, and Framer Motion.",
-  metadataBase: new URL("https://itstheanurag.github.io/bitsandpieces"),
+    "Fluid, spring-driven React and Tailwind CSS v4 components you copy directly into your codebase.",
+  metadataBase: new URL("https://tessera.ui"),
   keywords: [
     "React",
     "UI Components",
     "Next.js",
     "Tailwind CSS",
-    "Framer Motion",
-    "Web Design",
+    "Motion",
+    "Design Engineering",
   ],
   authors: [{ name: "Gaurav", url: "https://github.com/itstheanurag" }],
   openGraph: {
-    title: "Bits&Pieces - Premium React UI Components",
+    title: "Tessera — Tactile React UI components",
     description:
-      "A high-performance toolkit for React developers who demand speed, accessibility, and pixel-perfect aesthetics.",
-    url: "https://itstheanurag.github.io/bitsandpieces",
-    siteName: "Bits&Pieces",
-    images: [
-      {
-        url: "/logo.png",
-        width: 1200,
-        height: 630,
-        alt: "Bits&Pieces Logo",
-      },
-    ],
+      "Fluid, spring-driven React and Tailwind CSS v4 components you copy directly into your codebase.",
+    url: "https://tessera.ui",
+    siteName: "Tessera",
     locale: "en_US",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Bits&Pieces",
-    description: "Premium React UI Components",
-    images: ["/logo.png"],
+    title: "Tessera",
+    description:
+      "Fluid, spring-driven React and Tailwind CSS v4 components you own in source.",
   },
   icons: {
     icon: "/icon.png",
@@ -64,17 +50,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        suppressHydrationWarning={true}
-        className={`${outfit.variable} ${jetbrainsMono.variable} antialiased bg-background font-sans`}
+        suppressHydrationWarning
+        className="antialiased bg-background text-foreground font-sans"
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-        </ThemeProvider>
+        {children}
       </body>
     </html>
   );

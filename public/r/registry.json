@@ -1,37 +1,98 @@
 {
   "$schema": "https://ui.shadcn.com/schema/registry.json",
-  "name": "bitsandpieces",
-  "homepage": "https://itstheanurag.github.io/bitsandpieces",
+  "name": "tessera",
+  "homepage": "https://tessera.ui",
   "items": [
     {
-      "name": "multi-step-form",
-      "type": "registry:block",
-      "title": "Multi Step Form",
-      "description": "A flexible multi-step form builder with animations and validation.",
-      "dependencies": ["motion", "lucide-react", "clsx", "tailwind-merge"],
+      "name": "stitched-button",
+      "type": "registry:component",
+      "title": "Stitched Button",
+      "description": "Tactile pill button with an inset 1px dashed thread border and crisp press feedback.",
+      "dependencies": ["clsx", "tailwind-merge"],
       "files": [
         {
-          "path": "registry/bitsandpieces/forms/multi-step-form/multi-step-form.tsx",
+          "path": "registry/tessera/inputs-and-forms/stitched-button/stitched-button.tsx",
           "type": "registry:component",
-          "target": "components/bitsandpieces/multi-step-form/multi-step-form.tsx"
+          "target": "components/tessera/stitched-button.tsx"
         },
         {
-          "path": "registry/bitsandpieces/forms/multi-step-form/types.ts",
+          "path": "registry/tessera/lib/utils.ts",
+          "type": "registry:lib",
+          "target": "lib/utils.ts"
+        }
+      ]
+    },
+    {
+      "name": "segmented-dock",
+      "type": "registry:component",
+      "title": "Segmented Dock",
+      "description": "Shared-layout spring tab switcher with keyboard roles and reduced-motion support.",
+      "dependencies": ["motion", "clsx", "tailwind-merge"],
+      "files": [
+        {
+          "path": "registry/tessera/navigation-and-layout/segmented-dock/segmented-dock.tsx",
           "type": "registry:component",
-          "target": "components/bitsandpieces/multi-step-form/types.ts"
+          "target": "components/tessera/segmented-dock.tsx"
         },
         {
-          "path": "registry/bitsandpieces/forms/multi-step-form/form-input.tsx",
+          "path": "registry/tessera/lib/utils.ts",
+          "type": "registry:lib",
+          "target": "lib/utils.ts"
+        }
+      ]
+    },
+    {
+      "name": "dynamic-tray",
+      "type": "registry:component",
+      "title": "Dynamic Tray",
+      "description": "Multi-view morphing sheet with smooth spring height interpolation.",
+      "dependencies": ["motion", "clsx", "tailwind-merge"],
+      "files": [
+        {
+          "path": "registry/tessera/overlays-and-feedback/dynamic-tray/dynamic-tray.tsx",
           "type": "registry:component",
-          "target": "components/bitsandpieces/multi-step-form/form-input.tsx"
+          "target": "components/tessera/dynamic-tray.tsx"
         },
         {
-          "path": "registry/bitsandpieces/forms/multi-step-form/step-indicator.tsx",
+          "path": "registry/tessera/lib/utils.ts",
+          "type": "registry:lib",
+          "target": "lib/utils.ts"
+        }
+      ]
+    },
+    {
+      "name": "spring-card-stack",
+      "type": "registry:component",
+      "title": "Spring Card Stack",
+      "description": "Interactive depth-layered card deck driven by spring physics.",
+      "dependencies": ["motion", "clsx", "tailwind-merge"],
+      "files": [
+        {
+          "path": "registry/tessera/cards-and-display/spring-card-stack/spring-card-stack.tsx",
           "type": "registry:component",
-          "target": "components/bitsandpieces/multi-step-form/step-indicator.tsx"
+          "target": "components/tessera/spring-card-stack.tsx"
         },
         {
-          "path": "registry/bitsandpieces/lib/utils.ts",
+          "path": "registry/tessera/lib/utils.ts",
+          "type": "registry:lib",
+          "target": "lib/utils.ts"
+        }
+      ]
+    },
+    {
+      "name": "hold-button",
+      "type": "registry:component",
+      "title": "Hold Button",
+      "description": "Asymmetric hold-to-confirm button with linear press fill and snappy ease-out release.",
+      "dependencies": ["react-icons", "clsx", "tailwind-merge"],
+      "files": [
+        {
+          "path": "registry/tessera/motion-and-effects/hold-button/hold-button.tsx",
+          "type": "registry:component",
+          "target": "components/tessera/hold-button.tsx"
+        },
+        {
+          "path": "registry/tessera/lib/utils.ts",
           "type": "registry:lib",
           "target": "lib/utils.ts"
         }

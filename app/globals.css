@@ -17,7 +17,7 @@ code[data-line-numbers] > [data-line]::before {
   width: 1rem;
   margin-right: 1rem;
   text-align: right;
-  color: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.24);
 }
 
 [data-line] {
@@ -26,88 +26,71 @@ code[data-line-numbers] > [data-line]::before {
 }
 
 [data-highlighted-line] {
-  background: rgba(255, 255, 255, 0.1);
-  border-left-color: var(--primary);
+  background: rgba(255, 255, 255, 0.08);
+  border-left-color: #111113;
 }
-
-/* Shiki syntax highlighting is handled natively by rehype-pretty-code and codeToHtml */
-@custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Refined Light Mode - Clean & Professional  */
-  --background: oklch(0.985 0.002 250);
-  --foreground: oklch(0.145 0.015 260);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0.015 260);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0.015 260);
-  --primary: oklch(0.205 0.02 265);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.965 0.005 250);
-  --secondary-foreground: oklch(0.145 0.015 260);
-  --muted: oklch(0.96 0.005 250);
-  --muted-foreground: oklch(0.45 0.015 260);
-  --accent: oklch(0.955 0.008 250);
-  --accent-foreground: oklch(0.145 0.015 260);
-  --destructive: oklch(0.55 0.22 25);
-  --destructive-foreground: oklch(0.985 0 0);
+  scrollbar-gutter: stable;
+  /* Pure Luminous Light — Family.co porcelain surfaces + obsidian ink */
+  --background: #ffffff;
+  --foreground: #111113;
+  --surface: #f6f6f8;
+  --surface-strong: #ededf0;
+  --card: #ffffff;
+  --card-foreground: #111113;
+  --popover: #ffffff;
+  --popover-foreground: #111113;
+  --primary: #111113;
+  --primary-foreground: #ffffff;
+  --secondary: #f4f4f6;
+  --secondary-foreground: #111113;
+  --muted: #f4f4f6;
+  --muted-foreground: #6b6b73;
+  --accent: #f0f0f3;
+  --accent-foreground: #111113;
+  --brand-accent: #111113;
+  --destructive: #d93829;
+  --destructive-foreground: #ffffff;
 
-  --border: oklch(0.915 0.005 260);
-  --input: oklch(0.915 0.005 260);
-  --ring: oklch(0.55 0.15 265);
+  --border: #e7e7ec;
+  --input: #e2e2e8;
+  --ring: #111113;
 
-  --radius: 0.5rem;
+  --radius: 0.75rem;
 
-  /* Shadows */
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.03);
-  --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.06), 0 1px 2px -1px rgb(0 0 0 / 0.06);
-  --shadow-md:
-    0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+  /* Motion tokens */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
 
-  /* Fumadocs overrides */
-  --fd-background-fd: oklch(0.985 0.002 250);
-  --fd-foreground: oklch(0.145 0.015 260);
-  --fd-muted: oklch(0.45 0.015 260);
-  --fd-muted-foreground: oklch(0.55 0.01 260);
-  --fd-border: oklch(0.92 0.003 260);
-  --fd-primary: oklch(0.35 0.12 265);
-}
+  /* Soft tactile multi-layer light elevation */
+  --shadow-sm:
+    0 1px 2px rgba(17, 17, 19, 0.04),
+    0 0 0 1px rgba(17, 17, 19, 0.05);
+  --shadow-card:
+    0 2px 6px -1px rgba(17, 17, 19, 0.04),
+    0 12px 28px -8px rgba(17, 17, 19, 0.06),
+    0 0 0 1px rgba(17, 17, 19, 0.055);
+  --shadow-float:
+    0 4px 12px -2px rgba(17, 17, 19, 0.06),
+    0 24px 48px -12px rgba(17, 17, 19, 0.1),
+    0 0 0 1px rgba(17, 17, 19, 0.06);
 
-.dark {
-  /* Ultra Dark Mode - Premium Obsidian */
-  --background: oklch(0.095 0.005 270);
-  --foreground: oklch(0.93 0.005 250);
-  --card: oklch(0.145 0.012 270);
-  --card-foreground: oklch(0.93 0.005 250);
-  --popover: oklch(0.145 0.012 270);
-  --popover-foreground: oklch(0.93 0.005 250);
-  --primary: oklch(0.93 0.005 250);
-  --primary-foreground: oklch(0.095 0.005 270);
-  --secondary: oklch(0.145 0.012 270);
-  --secondary-foreground: oklch(0.93 0.005 250);
-  --muted: oklch(0.16 0.01 270);
-  --muted-foreground: oklch(0.55 0.01 260);
-  --accent: oklch(0.18 0.015 270);
-  --accent-foreground: oklch(0.93 0.005 250);
-  --destructive: oklch(0.45 0.2 25);
-  --destructive-foreground: oklch(0.93 0 0);
-
-  --border: oklch(0.24 0.015 270);
-  --input: oklch(0.24 0.015 270);
-  --ring: oklch(0.65 0.12 265);
-
-  /* Fumadocs overrides */
-  --fd-background: oklch(0.095 0.005 270);
-  --fd-foreground: oklch(0.93 0.005 250);
-  --fd-muted: oklch(0.55 0.01 260);
-  --fd-muted-foreground: oklch(0.5 0.008 260);
-  --fd-border: oklch(0.18 0.006 270);
-  --fd-primary: oklch(0.75 0.08 265);
+  /* Docs tokens */
+  --fd-background-fd: var(--background);
+  --fd-foreground: var(--foreground);
+  --fd-muted: var(--muted-foreground);
+  --fd-muted-foreground: var(--muted-foreground);
+  --fd-border: var(--border);
+  --fd-primary: var(--primary);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-strong: var(--surface-strong);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
@@ -120,105 +103,122 @@ code[data-line-numbers] > [data-line]::before {
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+  --color-brand-accent: var(--brand-accent);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
 
-  --radius-sm: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
   --radius-md: var(--radius);
-  --radius-lg: calc(var(--radius) + 2px);
-  --radius-xl: calc(var(--radius) + 4px);
-
-  --animate-spotlight: spotlight 2s ease 0.75s 1 forwards;
-  @keyframes spotlight {
-    0% {
-      opacity: 0;
-      transform: translate(-72%, -62%) scale(0.5);
-    }
-    100% {
-      opacity: 1;
-      transform: translate(-50%, -40%) scale(1);
-    }
-  }
+  --radius-lg: calc(var(--radius) + 4px);
+  --radius-xl: calc(var(--radius) + 8px);
 }
 
-/* Premium Utilities */
-
-@utility glass-card {
-  background: color-mix(in srgb, var(--card) 60%, transparent);
-  backdrop-filter: blur(12px);
-  border: 1px solid var(--border);
-  box-shadow:
-    0 4px 6px -1px rgb(0 0 0 / 0.1),
-    0 2px 4px -2px rgb(0 0 0 / 0.1);
-}
-
-@utility text-gradient {
-  background: linear-gradient(to right, oklch(0.98 0 0), oklch(0.7 0 0));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-
-  body:not(.dark) & {
-    background: linear-gradient(
-      to right,
-      oklch(0.12 0.01 240),
-      oklch(0.4 0.1 240)
-    );
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-}
-
-@utility spotlight-bg {
-  background-image: radial-gradient(
-    circle at center,
-    rgba(255, 255, 255, 0.08) 0%,
-    transparent 70%
-  );
-  @variant dark {
-    background-image: radial-gradient(
-      circle at center,
-      rgba(255, 255, 255, 0.05) 0%,
-      transparent 70%
-    );
-  }
+@theme {
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-mono:
+    "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    monospace;
 }
 
 @layer base {
   * {
     @apply border-border;
   }
-  body {
+
+  html {
+    scroll-behavior: smooth;
+    caret-color: #111113;
+    color-scheme: light;
+  }
+
+  html {
+  scrollbar-gutter: stable;
+}
+
+body {
     @apply bg-background text-foreground antialiased;
-    font-family: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
+    font-family: var(--font-sans);
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background-color: #111113;
+    color: #ffffff;
+  }
+
+  a {
+    text-underline-offset: 4px;
   }
 }
 
-/* Base Font Definitions for Tailwind V4 */
-@theme {
-  --font-sans: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
-  --font-mono:
-    var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, Menlo, Monaco,
-    Consolas, monospace;
+/* Disable focus outlines globally */
+*:focus,
+*:focus-visible {
+  outline: none !important;
 }
 
-/* View transition theming */
-/* View Transitions API - Theme Toggle Animation */
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation: none;
-  mix-blend-mode: normal;
-  overflow: clip;
+/* Clean minimal scrollbars & Shiki light code surface */
+.tessera-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(17, 17, 19, 0.16) transparent;
 }
 
-::view-transition-old(root) {
-  z-index: 1;
+.tessera-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
 }
 
-::view-transition-new(root) {
-  z-index: 9999;
+.tessera-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.tessera-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(17, 17, 19, 0.16);
+  border-radius: 9999px;
+}
+
+.tessera-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(17, 17, 19, 0.28);
+}
+
+.tessera-code-block .shiki {
+  background-color: transparent !important;
+  margin: 0;
+}
+
+/* Tactile press & pointer-gated hover micro-interactions */
+.tessera-press {
+  transition: transform 140ms var(--ease-out), background-color 160ms ease,
+    border-color 160ms ease, color 160ms ease, box-shadow 180ms ease;
+}
+
+.tessera-press:active {
+  transform: scale(0.965);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .tessera-lift {
+    transition: transform 220ms var(--ease-out), box-shadow 220ms ease;
+  }
+  .tessera-lift:hover {
+    transform: translateY(-2px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .tessera-press,
+  .tessera-lift {
+    transition: background-color 150ms ease, border-color 150ms ease,
+      color 150ms ease;
+  }
+  .tessera-press:active,
+  .tessera-lift:hover {
+    transform: none;
+  }
 }

@@ -1,4 +1,4 @@
-import { cn } from "@/registry/bitsandpieces/lib/utils";
+import { cn } from "@/registry/tessera/lib/utils";
 import * as React from "react";
 
 const Card = React.forwardRef<
